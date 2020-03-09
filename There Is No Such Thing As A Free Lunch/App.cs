@@ -29,10 +29,10 @@ namespace There_Is_No_Such_Thing_As_A_Free_Lunch
 
                 foreach (OrderItem item in items)
                 {
-                    taxAmount = Round(item.Amount * taxRate);
+                    taxAmount = item.Amount * taxRate;
                     taxTotalAmount += taxAmount;
-                    extraAmount = Round(prorated ? (item.Amount / subtotal) * tipPlusFees : (1.0 / items.Count) * tipPlusFees);
-                    totalAmount = Round(item.Amount + taxAmount + extraAmount);
+                    extraAmount = prorated ? (item.Amount / subtotal) * tipPlusFees : (1.0 / items.Count) * tipPlusFees;
+                    totalAmount = item.Amount + taxAmount + extraAmount;
                     grandTotalAmount += totalAmount;
                     Console.WriteLine(item.Name + ": " + Round(totalAmount).ToString() + " (" + Round(item.Amount).ToString() +
                         " + " + Round(taxAmount) + " tax + " + Round(extraAmount).ToString() + " tip/fees" + ")");
@@ -40,7 +40,8 @@ namespace There_Is_No_Such_Thing_As_A_Free_Lunch
 
                 string proratedString = prorated ? "ON" : "OFF";
                 Console.WriteLine();
-                Console.WriteLine("Total: " + grandTotalAmount + " (" + subtotal + " subtotal + " + taxTotalAmount + " tax + " + tipPlusFees + " tip/fees)");
+                Console.WriteLine("Total: " + Round(grandTotalAmount) + " (" + Round(subtotal) + " subtotal + " + Round(taxTotalAmount) + " tax + " + Round(tipPlusFees) + " tip/fees)");
+                Console.WriteLine("Tax rate: " + Round(taxRate * 100).ToString() + "%");
                 Console.WriteLine("Tip/fees proration is " + proratedString);
 
                 Console.ReadLine();
@@ -70,6 +71,20 @@ namespace There_Is_No_Such_Thing_As_A_Free_Lunch
             {
                 DirectoryInfo dir = new DirectoryInfo(Directory.GetCurrentDirectory());
                 FileInfo[] files = dir.GetFiles("*.txt");
+
+                if (files.Length < 1)
+                {
+                    Console.WriteLine("Error! Cannot find input .txt file in the current directory.");
+                    Console.ReadLine();
+                    Environment.Exit(1);
+                }
+                else if (files.Length > 1)
+                {
+                    Console.WriteLine("Error! There is more than one .txt file in the current directory.");
+                    Console.ReadLine();
+                    Environment.Exit(1);
+                }
+
                 StreamReader file = new StreamReader(files[0].FullName);
 
                 string line;
