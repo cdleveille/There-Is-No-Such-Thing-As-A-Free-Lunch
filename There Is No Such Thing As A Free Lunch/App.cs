@@ -49,6 +49,8 @@ namespace There_Is_No_Such_Thing_As_A_Free_Lunch
             catch (Exception e)
             {
                 Console.WriteLine("Error! " + e.Message);
+                Console.ReadLine();
+                Environment.Exit(1);
             }
         }
 
@@ -62,6 +64,8 @@ namespace There_Is_No_Such_Thing_As_A_Free_Lunch
             catch (Exception e)
             {
                 Console.WriteLine("Error! Please check config file: " + e.Message);
+                Console.ReadLine();
+                Environment.Exit(1);
             }
         }
 
@@ -102,10 +106,17 @@ namespace There_Is_No_Such_Thing_As_A_Free_Lunch
                 }
 
                 file.Close();
+
+                if (items.Count < 2)
+                {
+                    throw new Exception("Not enough order items specified.");
+                }
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error! Please check .txt input file: " + e.Message);
+                Console.ReadLine();
+                Environment.Exit(1);
             }
         }
 
