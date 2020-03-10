@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("There Is No Such Thing As A Free Lunch")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Calculates amount owed per person in a group meal order, accounting for tax & tip/fees.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Chris Leveille")]
 [assembly: AssemblyProduct("There Is No Such Thing As A Free Lunch")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyCopyright("Copyright © 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

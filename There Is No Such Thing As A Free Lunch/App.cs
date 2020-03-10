@@ -31,7 +31,7 @@ namespace There_Is_No_Such_Thing_As_A_Free_Lunch
                 {
                     taxAmount = item.Amount * taxRate;
                     taxTotalAmount += taxAmount;
-                    extraAmount = prorated ? (item.Amount / subtotal) * tipPlusFees : (1.0 / items.Count) * tipPlusFees;
+                    extraAmount = prorated ? item.Amount * tipPlusFees / subtotal : tipPlusFees / items.Count;
                     totalAmount = item.Amount + taxAmount + extraAmount;
                     grandTotalAmount += totalAmount;
                     Console.WriteLine(item.Name + ": " + Round(totalAmount).ToString() + " (" + Round(item.Amount).ToString() +
