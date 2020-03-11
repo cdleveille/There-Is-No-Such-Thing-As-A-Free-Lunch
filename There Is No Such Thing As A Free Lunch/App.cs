@@ -7,15 +7,15 @@ namespace There_Is_No_Such_Thing_As_A_Free_Lunch
 {
     class App
     {
-        static double tipPlusFees;
-        static double taxRate;
-        static bool prorated;
-        static List<OrderItem> items = new List<OrderItem>();
+        private static double tipPlusFees;
+        private static bool prorated;
+        private static double taxRate;
+        private static List<OrderItem> items = new List<OrderItem>();
 
         public static void Main(string[] args)
         {
             double subtotal = 0, grandTotalAmount = 0, taxTotalAmount = 0;
-            double taxAmount, extraAmount, totalAmount;
+            double participantTaxAmount, participantExtraAmount, participantTotalAmount;
 
             try
             {
@@ -29,28 +29,24 @@ namespace There_Is_No_Such_Thing_As_A_Free_Lunch
 
                 foreach (OrderItem item in items)
                 {
-                    taxAmount = item.Amount * taxRate;
-                    taxTotalAmount += taxAmount;
-                    extraAmount = prorated ? item.Amount * tipPlusFees / subtotal : tipPlusFees / items.Count;
-                    totalAmount = item.Amount + taxAmount + extraAmount;
-                    grandTotalAmount += totalAmount;
-                    Console.WriteLine(item.Name + ": " + Round(totalAmount).ToString() + " (" + Round(item.Amount).ToString() +
-                        " + " + Round(taxAmount) + " tax + " + Round(extraAmount).ToString() + " tip/fees" + ")");
+                    participantTaxAmount = item.Amount * taxRate * 0.01;
+                    participantExtraAmount = prorated ? item.Amount * tipPlusFees / subtotal : tipPlusFees / items.Count;
+                    participantTotalAmount = item.Amount + participantTaxAmount + participantExtraAmount;
+                    taxTotalAmount += participantTaxAmount;
+                    grandTotalAmount += participantTotalAmount;
+                    Console.WriteLine(item.Name + ": " + Round(participantTotalAmount) + " (" + Round(item.Amount) +
+                        " + " + Round(participantTaxAmount) + " tax + " + Round(participantExtraAmount) + " tip/fees" + ")");
                 }
 
-                string proratedString = prorated ? "ON" : "OFF";
                 Console.WriteLine();
-                Console.WriteLine("Total: " + Round(grandTotalAmount) + " (" + Round(subtotal) + " subtotal + " + Round(taxTotalAmount) + " tax + " + Round(tipPlusFees) + " tip/fees)");
-                Console.WriteLine("Tax rate: " + Round(taxRate * 100).ToString() + "%");
-                Console.WriteLine("Tip/fees proration is " + proratedString);
-
+                Console.WriteLine("Total: " + Round(grandTotalAmount) + " (" + Round(subtotal) + " subtotal + " + Round(taxTotalAmount) + " tax + " + tipPlusFees + " tip/fees)");
+                Console.WriteLine("Tax rate: " + Round(taxRate) + "%");
+                Console.WriteLine("Tip/fees proration is " + (prorated ? "ON" : "OFF"));
                 Console.ReadLine();
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error! " + e.Message);
-                Console.ReadLine();
-                Environment.Exit(1);
+                AbendWithMessage("Error! " + e.Message);
             }
         }
 
@@ -58,14 +54,12 @@ namespace There_Is_No_Such_Thing_As_A_Free_Lunch
         {
             try
             {
-                taxRate = Convert.ToDouble(ConfigurationSettings.AppSettings["taxRate"]) * 0.01;
                 prorated = Convert.ToBoolean(ConfigurationSettings.AppSettings["prorated"]);
+                taxRate = Convert.ToDouble(ConfigurationSettings.AppSettings["taxRate"]);
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error! Please check config file: " + e.Message);
-                Console.ReadLine();
-                Environment.Exit(1);
+                AbendWithMessage("Error! Please check config file: " + e.Message);
             }
         }
 
@@ -78,15 +72,11 @@ namespace There_Is_No_Such_Thing_As_A_Free_Lunch
 
                 if (files.Length < 1)
                 {
-                    Console.WriteLine("Error! Cannot find input .txt file in the current directory.");
-                    Console.ReadLine();
-                    Environment.Exit(1);
+                    AbendWithMessage("Error! Cannot find input .txt file in the application directory.");
                 }
                 else if (files.Length > 1)
                 {
-                    Console.WriteLine("Error! There is more than one .txt file in the current directory.");
-                    Console.ReadLine();
-                    Environment.Exit(1);
+                    AbendWithMessage("Error! There is more than one .txt file in the application directory.");
                 }
 
                 StreamReader file = new StreamReader(files[0].FullName);
@@ -107,22 +97,27 @@ namespace There_Is_No_Such_Thing_As_A_Free_Lunch
 
                 file.Close();
 
-                if (items.Count < 2)
+                if (items.Count == 0)
                 {
-                    throw new Exception("Not enough order items specified.");
+                    throw new Exception("No order items specified.");
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error! Please check .txt input file: " + e.Message);
-                Console.ReadLine();
-                Environment.Exit(1);
+                AbendWithMessage("Error! Please check .txt input file: " + e.Message);
             }
         }
 
         private static double Round(double amount)
         {
             return Math.Round(amount, 2, MidpointRounding.AwayFromZero);
+        }
+
+        private static void AbendWithMessage(string message)
+        {
+            Console.WriteLine(message);
+            Console.ReadLine();
+            Environment.Exit(1);
         }
     }
 
