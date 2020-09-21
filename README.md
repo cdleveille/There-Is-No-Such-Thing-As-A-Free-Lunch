@@ -1,6 +1,8 @@
 # There Is No Such Thing As A Free Lunch
 Calculates amount owed per person in a group meal order, accounting for tax &amp; tip/fees.
 
+Check out the SPA web version by [@walshdan9163](https://github.com/walshdan9163) on Heroku: https://nofreelunch.herokuapp.com/
+
 # Input File Instructions
 - The input file must be a single text file (*.txt) in the same directory as the executable and config file.
 - Each line must contain the **name** of an order participant, followed by a single space, followed by the summed **amount** of that participant's order item(s).
